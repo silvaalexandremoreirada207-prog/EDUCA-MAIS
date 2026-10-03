@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educa+ | Painel do Professor • Arcade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-blue-700 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Cabeçalho -->
+    <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl shadow flex items-center justify-center border-2 border-yellow-200">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </a>
+                <span class="text-2xl font-black tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> <span class="text-xs bg-blue-800 px-2.5 py-1 rounded-xl text-yellow-300 border border-blue-600">Professor</span></span>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="bg-blue-950 hover:bg-blue-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition border border-blue-600 flex items-center shadow">
+                    <i class="fa-solid fa-gamepad mr-2 text-yellow-400"></i> Ver Portal Arcade
+                </a>
+                <button onclick="logoutUser()" class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition shadow">
+                    <i class="fa-solid fa-power-off mr-1"></i> Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="bg-blue-900 rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-yellow-400 mb-10 text-white flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <div class="inline-flex items-center space-x-2 bg-yellow-400 text-blue-950 px-3 py-1 rounded-full text-xs font-black uppercase mb-3">
+                    <i class="fa-solid fa-shield-halved"></i> <span>Painel de Gestão de Missões</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-black uppercase tracking-wide">Gerenciar Cursos e Direções</h1>
+                <p class="text-blue-200 text-sm mt-1">Adicione novas fases, atualize links do YouTube ou edite conteúdos da trilha ADS.</p>
+            </div>
+            <button onclick="openCourseFormModal()" class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black px-6 py-3.5 rounded-2xl shadow-xl transition uppercase tracking-wider text-sm flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-plus text-base"></i>
+                <span>Nova Missão / Curso</span>
+            </button>
+        </div>
+
+        <!-- Lista de Cursos Cadastrados -->
+        <div class="bg-blue-900 rounded-3xl shadow-2xl border-4 border-blue-600 p-6 sm:p-8 text-white">
+            <h2 class="text-xl font-black uppercase mb-6 flex items-center text-yellow-400">
+                <i class="fa-solid fa-list-check mr-2.5"></i> Cursos Registrados no Sistema (<span id="profCourseCount">0</span>)
+            </h2>
+            <div id="professorCoursesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </main>
+
+    <!-- Modal de Cadastro / Edição de Curso -->
+    <div id="courseFormModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-blue-950 text-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border-4 border-yellow-400 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCourseFormModal()" class="absolute top-5 right-5 text-blue-300 hover:text-white bg-blue-900 w-8 h-8 rounded-full flex items-center justify-center font-bold"><i class="fa-solid fa-xmark"></i></button>
+            
+            <h3 id="modalFormTitle" class="text-2xl font-black uppercase text-yellow-400 mb-1">Nova Missão</h3>
+            <p class="text-xs text-blue-200 mb-6">Preencha os dados do curso e link do YouTube</p>
+
+            <form id="courseForm" onsubmit="handleSaveCourse(event)" class="space-y-4">
+                <input type="hidden" id="editCourseId">
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Título da Fase / Curso</label>
+                    <input type="text" id="formTitle" required placeholder="Ex: Fase 5: Node.js Avançado" class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Categoria / Mundo</label>
+                        <select id="formCategory" class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                            <option value="Programação">Programação</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Design">Design</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Nível</label>
+                        <select id="formLevel" class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-3 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Instrutor / Equipe</label>
+                    <input type="text" id="formInstructor" required placeholder="Ex: Prof. Alexandre Moreira" class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Link do YouTube (Playlist / Aula)</label>
+                    <input type="url" id="formLink" required placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">URL da Imagem / Banner</label>
+                    <input type="url" id="formImage" required placeholder="https://images.unsplash.com/..." class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Descrição</label>
+                    <textarea id="formDescription" rows="3" required placeholder="Resumo do conteúdo..." class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black py-3.5 rounded-xl shadow uppercase tracking-wider transition">Salvar Missão</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-blue-950 text-blue-300 py-10 border-t-4 border-yellow-400 text-center text-sm mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-2 font-black text-white text-base tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull; Painel do Professor</p>
+            <p>&copy; 2026 Todos os direitos reservados. UNIFIP - ADS</p>
+        </div>
+    </footer>
+
+    <script src="script/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'professor') {
+                alert('Acesso restrito a professores!');
+                window.location.href = 'index.html';
+                return;
+            }
+            renderProfessorCourses();
+        });
+
+        function renderProfessorCourses() {
+            const list = document.getElementById('professorCoursesList');
+            const count = document.getElementById('profCourseCount');
+            const courses = getStoredCourses();
+
+            count.textContent = courses.length;
+
+            if (courses.length === 0) {
+                list.innerHTML = `<p class="col-span-full text-center text-blue-300 py-8">Nenhum curso cadastrado.</p>`;
+                return;
+            }
+
+            list.innerHTML = courses.map(course => `
+                <div class="bg-blue-950 border-2 border-blue-700 rounded-2xl p-5 flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2.5 py-0.5 rounded">${course.category}</span>
+                            <span class="text-xs text-blue-300 font-bold">${course.level}</span>
+                        </div>
+                        <h3 class="font-black text-white text-base mb-1 leading-snug">${course.title}</h3>
+                        <p class="text-xs text-blue-300 mb-3"><i class="fa-solid fa-chalkboard-user mr-1 text-yellow-400"></i> ${course.instructor}</p>
+                        <p class="text-xs text-blue-200 line-clamp-2 mb-4">${course.description}</p>
+                    </div>
+                    <div class="flex space-x-2 pt-2 border-t border-blue-900">
+                        <button onclick="editCourse('${course.id}')" class="flex-1 bg-blue-900 hover:bg-blue-800 text-yellow-400 py-2 rounded-xl text-xs font-bold uppercase transition border border-blue-700">Editar</button>
+                        <button onclick="deleteCourse('${course.id}')" class="bg-rose-950 hover:bg-rose-900 text-rose-300 px-3 py-2 rounded-xl text-xs font-bold uppercase transition border border-rose-800"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openCourseFormModal() {
+            document.getElementById('editCourseId').value = '';
+            document.getElementById('modalFormTitle').textContent = 'Nova Missão';
+            document.getElementById('courseForm').reset();
+            document.getElementById('courseFormModal').classList.remove('hidden');
+        }
+
+        function closeCourseFormModal() {
+            document.getElementById('courseFormModal').classList.add('hidden');
+        }
+
+        function editCourse(id) {
+            const courses = getStoredCourses();
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+
+            document.getElementById('editCourseId').value = course.id;
+            document.getElementById('modalFormTitle').textContent = 'Editar Missão';
+            document.getElementById('formTitle').value = course.title;
+            document.getElementById('formCategory').value = course.category;
+            document.getElementById('formLevel').value = course.level;
+            document.getElementById('formInstructor').value = course.instructor;
+            document.getElementById('formLink').value = course.link;
+            document.getElementById('formImage').value = course.image || '';
+            document.getElementById('formDescription').value = course.description;
+
+            document.getElementById('courseFormModal').classList.remove('hidden');
+        }
+
+        function handleSaveCourse(e) {
+            e.preventDefault();
+            const id = document.getElementById('editCourseId').value;
+            const title = document.getElementById('formTitle').value;
+            const category = document.getElementById('formCategory').value;
+            const level = document.getElementById('formLevel').value;
+            const instructor = document.getElementById('formInstructor').value;
+            const link = document.getElementById('formLink').value;
+            const image = document.getElementById('formImage').value;
+            const description = document.getElementById('formDescription').value;
+
+            let courses = getStoredCourses();
+
+            if (id) {
+                courses = courses.map(c => c.id === id ? { ...c, title, category, level, instructor, link, image, description } : c);
+            } else {
+                const newCourse = {
+                    id: Date.now().toString(),
+                    title, category, level, instructor, link, image, description, rating: 4.9
+                };
+                courses.push(newCourse);
+            }
+
+            saveCourses(courses);
+            closeCourseFormModal();
+            renderProfessorCourses();
+            alert('Curso salvo com sucesso!');
+        }
+
+        function deleteCourse(id) {
+            if (!confirm('Tem certeza que deseja excluir esta missão?')) return;
+            let courses = getStoredCourses();
+            courses = courses.filter(c => c.id !== id);
+            saveCourses(courses);
+            renderProfessorCourses();
+            alert('Curso excluído com sucesso!');
+        }
+    </script>
+</body>
+</html>
