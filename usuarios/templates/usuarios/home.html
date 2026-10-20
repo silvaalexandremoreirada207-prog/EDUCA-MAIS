@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-PT" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educa+ | Arcade Learning • ADS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-blue-700 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Cabeçalho com Explorar e Meus Favoritos ao lado da Logo -->
+    <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Grupo Esquerda: Logo + Explorar + Favoritos -->
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl shadow-inner flex items-center justify-center border-2 border-yellow-200">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-wider uppercase">Educa<span class="text-yellow-400">+</span></span>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-2 bg-blue-950/80 p-1.5 rounded-2xl border-2 border-blue-600">
+                    <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider shadow transition flex items-center border border-blue-400">
+                        <i class="fa-solid fa-compass mr-1.5 text-yellow-400"></i> Explorar
+                    </a>
+                    <a href="#favoritos" onclick="toggleFavoritosModal()" class="hover:bg-blue-800 text-blue-100 hover:text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center relative">
+                        <i class="fa-solid fa-bookmark mr-1.5 text-yellow-400"></i> Meus Favoritos 
+                        <span id="favBadge" class="bg-yellow-400 text-blue-950 text-[10px] px-2 py-0.5 rounded-full font-black ml-2 shadow">0</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Grupo Direita: Área do Professor + Login/Perfil -->
+            <div class="hidden md:flex items-center space-x-3">
+                <a href="/professor/" class="bg-blue-950 hover:bg-blue-800 text-yellow-300 hover:text-yellow-400 px-3.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition border-2 border-yellow-400/60 flex items-center shadow">
+                    <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Área do Professor
+                </a>
+
+                <div class="h-6 w-[1px] bg-blue-600"></div>
+
+                <div id="authSection" class="flex items-center space-x-2">
+                    <button onclick="openAuthModal('login')" class="hover:bg-blue-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition">
+                        Entrar
+                    </button>
+                    <button onclick="openAuthModal('register')" class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition shadow">
+                        Cadastrar
+                    </button>
+                </div>
+
+                <div id="userProfileSection" class="hidden items-center space-x-3 bg-blue-950 px-3 py-1.5 rounded-2xl border-2 border-blue-600">
+                    <div class="w-8 h-8 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-xs shadow" id="userInitial">A</div>
+                    <div class="text-left">
+                        <p class="text-xs font-bold text-white leading-tight" id="userNameDisplay">Nome</p>
+                        <p class="text-[10px] text-yellow-400 font-black uppercase" id="userRoleDisplay">Aluno</p>
+                    </div>
+                    <button onclick="logoutUser()" title="Sair" class="text-blue-200 hover:text-rose-400 ml-2 text-sm transition"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+
+            <!-- Botão Menu Mobile -->
+            <div class="flex md:hidden items-center">
+                <button onclick="toggleMobileMenu()" class="text-white bg-blue-950 p-2.5 rounded-xl border-2 border-yellow-400 focus:outline-none">
+                    <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-blue-950 border-t-4 border-yellow-400 px-4 pt-4 pb-6 space-y-4 shadow-2xl">
+            <div id="mobileUserProfile" class="hidden flex items-center justify-between bg-blue-900 p-3 rounded-2xl border border-blue-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-sm" id="mobileUserInitial">A</div>
+                    <div>
+                        <p class="text-xs font-bold text-white" id="mobileUserNameDisplay">Nome</p>
+                        <p class="text-[10px] text-yellow-400 uppercase font-bold" id="mobileUserRoleDisplay">Aluno</p>
+                    </div>
+                </div>
+                <button onclick="logoutUser()" class="text-rose-400 text-sm bg-blue-950 px-3 py-1.5 rounded-xl font-bold">Sair</button>
+            </div>
+
+            <div id="mobileAuthSection" class="grid grid-cols-2 gap-2">
+                <button onclick="openAuthModal('login'); toggleMobileMenu();" class="bg-blue-900 text-white py-2.5 rounded-xl text-xs font-bold border border-blue-700">
+                    Entrar
+                </button>
+                <button onclick="openAuthModal('register'); toggleMobileMenu();" class="bg-yellow-400 text-blue-950 py-2.5 rounded-xl text-xs font-black">
+                    Cadastrar
+                </button>
+            </div>
+
+            <hr class="border-blue-900">
+
+            <nav class="flex flex-col space-y-2 font-medium">
+                <a href="/" class="bg-blue-800 text-yellow-400 font-black px-4 py-3 rounded-xl transition flex items-center">
+                    <i class="fa-solid fa-compass mr-3"></i> Explorar Cursos
+                </a>
+                <a href="#favoritos" onclick="toggleFavoritosModal(); toggleMobileMenu();" class="hover:bg-blue-900 text-blue-100 px-4 py-3 rounded-xl transition flex justify-between items-center">
+                    <span><i class="fa-solid fa-bookmark mr-3 text-yellow-400"></i> Meus Favoritos</span>
+                    <span id="mobileFavBadge" class="bg-yellow-400 text-blue-950 text-xs px-2 py-0.5 rounded-full font-black">0</span>
+                </a>
+                <a href="/professor/" class="hover:bg-blue-900 text-blue-100 px-4 py-3 rounded-xl transition flex items-center">
+                    <i class="fa-solid fa-chalkboard-user mr-3 text-yellow-400"></i> Painel do Professor
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Banner Estilo Arcade -->
+        <section class="bg-blue-600 text-white py-14 px-4 text-center relative overflow-hidden shadow-2xl border-b-8 border-yellow-400">
+            <div class="max-w-4xl mx-auto relative z-10">
+                <div class="inline-flex items-center space-x-2 bg-yellow-400 text-blue-950 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4 shadow-md animate-pulse">
+                    <i class="fa-solid fa-gamepad"></i> <span>Modo Arcade • Trilha ADS UNIFIP</span>
+                </div>
+                <h1 class="text-3xl sm:text-6xl font-black tracking-wider uppercase drop-shadow-[0_5px_5px_rgba(0,0,0,0.4)] mb-4">
+                    Escolha sua <span class="text-yellow-300">Fase</span>
+                </h1>
+                <p class="text-base sm:text-lg text-blue-100 mb-8 max-w-2xl mx-auto font-medium">
+                    Complete missões, desbloqueie direções de estudo em vídeo e domine a Análise e Desenvolvimento de Sistemas jogando!
+                </p>
+                
+                <!-- Barra de Busca & Filtros Arcade -->
+                <div class="bg-blue-900/95 p-4 rounded-3xl shadow-2xl border-4 border-yellow-400 flex flex-col md:flex-row gap-3 max-w-3xl mx-auto">
+                    <div class="flex items-center flex-1 px-4 bg-white rounded-2xl">
+                        <i class="fa-solid fa-search text-blue-700 mr-2 font-bold"></i>
+                        <input type="text" id="searchInput" placeholder="Pesquisar missão ou curso..." class="w-full bg-transparent py-3 text-blue-950 font-bold focus:outline-none text-sm">
+                    </div>
+                    <select id="categoryFilter" class="bg-yellow-400 text-blue-950 px-4 py-3 rounded-2xl font-black text-xs uppercase focus:outline-none shadow cursor-pointer">
+                        <option value="">Todos os Mundos</option>
+                        <option value="Programação">Mundo 1 (Prog)</option>
+                        <option value="Tecnologia">Mundo 2 (Tech)</option>
+                        <option value="Design">Zona 3 (Design)</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                    <select id="levelFilter" class="bg-yellow-400 text-blue-950 px-4 py-3 rounded-2xl font-black text-xs uppercase focus:outline-none shadow cursor-pointer">
+                        <option value="">Todas as Dificuldades</option>
+                        <option value="Iniciante">Iniciante</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid de Cursos -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex justify-between items-center mb-8 bg-blue-800/80 p-4 rounded-2xl border-2 border-blue-600 shadow-md">
+                <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wide flex items-center">
+                    <i class="fa-solid fa-rocket text-yellow-400 mr-3 text-xl"></i> Missões & Direções Disponíveis
+                </h2>
+                <span id="courseCount" class="text-xs font-black bg-yellow-400 text-blue-950 px-3.5 py-1.5 rounded-full shadow">0 cursos</span>
+            </div>
+
+            <div id="coursesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+            <div id="emptyState" class="hidden text-center py-20 bg-blue-900 rounded-3xl shadow-xl border-4 border-dashed border-blue-600 mt-6 text-white">
+                <div class="text-yellow-400 text-6xl mb-4"><i class="fa-solid fa-ghost"></i></div>
+                <h3 class="text-xl font-black uppercase mb-1">Nenhuma missão encontrada</h3>
+                <p class="text-sm text-blue-200">Tente ajustar seus filtros de pesquisa.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modais -->
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-blue-950 text-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative border-4 border-yellow-400">
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-blue-300 hover:text-white bg-blue-900 w-8 h-8 rounded-full flex items-center justify-center font-bold"><i class="fa-solid fa-xmark"></i></button>
+            <div id="authModalBody"></div>
+        </div>
+    </div>
+
+    <div id="courseModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-blue-950 text-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border-4 border-yellow-400">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-blue-300 hover:text-white bg-blue-900 w-8 h-8 rounded-full flex items-center justify-center font-bold"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <div id="favoritosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-blue-950 text-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[80vh] flex flex-col border-4 border-yellow-400">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-black uppercase text-yellow-400 flex items-center"><i class="fa-solid fa-bookmark mr-2"></i> Missões Salvidas</h3>
+                <button onclick="toggleFavoritosModal()" class="text-blue-300 hover:text-white bg-blue-900 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="favoritosList" class="overflow-y-auto space-y-3 flex-grow pr-1"></div>
+        </div>
+    </div>
+
+    <footer class="bg-blue-950 text-blue-300 py-10 border-t-4 border-yellow-400 text-center text-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-2 font-black text-white text-base tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull; Arcade Learning Platform</p>
+            <p>&copy; 2026 Todos os direitos reservados. UNIFIP - ADS</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'usuarios/js/script.js' %}"></script>
+</body>
+</html>
