@@ -117,12 +117,13 @@
     </footer>
 
     <script src="{% static 'usuarios/js/script.js' %}"></script>
+    <script src="{% static 'usuarios/js/extras.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const user = getCurrentUser();
             if (!user || user.role !== 'professor') {
                 alert('Acesso restrito a professores!');
-                window.location.href = 'index.html';
+                window.location.href = '/';
                 return;
             }
             renderProfessorCourses();
@@ -144,12 +145,12 @@
                 <div class="bg-blue-950 border-2 border-blue-700 rounded-2xl p-5 flex flex-col justify-between shadow-lg">
                     <div>
                         <div class="flex justify-between items-start mb-2">
-                            <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2.5 py-0.5 rounded">${course.category}</span>
-                            <span class="text-xs text-blue-300 font-bold">${course.level}</span>
+                            <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2.5 py-0.5 rounded">${esc(course.category)}</span>
+                            <span class="text-xs text-blue-300 font-bold">${esc(course.level)}</span>
                         </div>
-                        <h3 class="font-black text-white text-base mb-1 leading-snug">${course.title}</h3>
-                        <p class="text-xs text-blue-300 mb-3"><i class="fa-solid fa-chalkboard-user mr-1 text-yellow-400"></i> ${course.instructor}</p>
-                        <p class="text-xs text-blue-200 line-clamp-2 mb-4">${course.description}</p>
+                        <h3 class="font-black text-white text-base mb-1 leading-snug">${esc(course.title)}</h3>
+                        <p class="text-xs text-blue-300 mb-3"><i class="fa-solid fa-chalkboard-user mr-1 text-yellow-400"></i> ${esc(course.instructor)}</p>
+                        <p class="text-xs text-blue-200 line-clamp-2 mb-4">${esc(course.description)}</p>
                     </div>
                     <div class="flex space-x-2 pt-2 border-t border-blue-900">
                         <button onclick="editCourse('${course.id}')" class="flex-1 bg-blue-900 hover:bg-blue-800 text-yellow-400 py-2 rounded-xl text-xs font-bold uppercase transition border border-blue-700">Editar</button>

@@ -4,124 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educa+ | Painel do Aluno</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Educa+ | Painel do Jogador</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
-
-    <!-- Header / Navbar -->
-    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50 border-b border-indigo-600">
+<body class="bg-blue-700 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+    <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white text-indigo-700 p-2.5 rounded-2xl font-black text-xl shadow-inner flex items-center justify-center">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <span class="text-2xl font-black tracking-wide">Educa<span class="text-amber-400">+</span></span>
-            </div>
-            
-            <nav class="hidden md:flex items-center space-x-1 bg-indigo-800/60 p-1.5 rounded-2xl border border-indigo-600/60">
-                <a href="/" class="hover:bg-indigo-700 text-indigo-100 hover:text-white px-4 py-2 rounded-xl text-sm font-medium transition flex items-center">
-                    <i class="fa-solid fa-compass mr-1.5 text-amber-400"></i> Explorar
-                </a>
-                <a href="/aluno/" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-sm transition flex items-center">
-                    <i class="fa-solid fa-bookmark mr-1.5 text-amber-400"></i> Meus Cursos Salvos
-                </a>
-            </nav>
-
-            <div class="hidden md:flex items-center space-x-3">
-                <a href="/professor/" class="bg-indigo-900/80 hover:bg-indigo-900 text-indigo-200 hover:text-white px-3.5 py-2.5 rounded-xl text-xs font-semibold transition border border-indigo-600 flex items-center">
-                    <i class="fa-solid fa-chalkboard-user mr-1.5 text-amber-400"></i> Área do Professor
-                </a>
-                <div id="userProfileSection" class="flex items-center space-x-3 bg-indigo-800 px-3 py-1.5 rounded-2xl border border-indigo-600">
-                    <div class="w-8 h-8 rounded-full bg-amber-400 text-indigo-950 font-black flex items-center justify-center text-xs" id="userInitial">A</div>
-                    <div class="text-left">
-                        <p class="text-xs font-bold text-white leading-tight" id="userNameDisplay">Nome</p>
-                        <p class="text-[10px] text-amber-300 font-semibold uppercase" id="userRoleDisplay">Aluno</p>
-                    </div>
-                    <button onclick="logoutUser()" title="Sair" class="text-indigo-200 hover:text-rose-400 ml-2 text-sm transition"><i class="fa-solid fa-power-off"></i></button>
-                </div>
+            <a href="/" class="flex items-center space-x-3">
+                <div class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl border-2 border-yellow-200"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="text-2xl font-black tracking-wider uppercase">Educa<span class="text-yellow-400">+</span></span>
+            </a>
+            <div id="userProfileSection" class="flex items-center space-x-3 bg-blue-950 px-3 py-1.5 rounded-2xl border-2 border-blue-600">
+                <div class="w-8 h-8 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-xs" id="userInitial">A</div>
+                <div><p class="text-xs font-bold leading-tight" id="userNameDisplay">Nome</p><p class="text-[10px] text-yellow-400 font-black uppercase" id="userRoleDisplay">Aluno</p></div>
+                <a href="/" title="Explorar" class="text-yellow-400 ml-2"><i class="fa-solid fa-compass"></i></a>
+                <button onclick="logoutUser()" title="Sair" class="text-blue-200 hover:text-rose-400 ml-1"><i class="fa-solid fa-power-off"></i></button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div class="mb-8">
-            <h1 class="text-2xl font-extrabold text-slate-800 flex items-center">
-                <i class="fa-solid fa-bookmark text-amber-500 mr-2"></i> Meus Cursos e Direções Salvas
-            </h1>
-            <p class="text-sm text-slate-500 mt-1">Acesse rapidamente todos os materiais e links que você salvou na sua jornada.</p>
-        </div>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10 text-white">
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4" id="statCards"></section>
 
-        <div id="studentFavoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Preenchido via JavaScript -->
-        </div>
+        <section>
+            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-trophy text-yellow-400 mr-2"></i> Conquistas</h2>
+            <div id="badgeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+        </section>
 
-        <div id="studentEmptyState" class="hidden text-center py-20 bg-white rounded-3xl shadow-sm border border-slate-200">
-            <div class="text-indigo-300 text-6xl mb-4"><i class="fa-solid fa-folder-open"></i></div>
-            <h3 class="text-lg font-bold text-slate-700 mb-1">Nenhum curso salvo ainda</h3>
-            <p class="text-sm text-slate-500 mb-6">Explore o catálogo e clique no ícone de marcador para salvar seus favoritos.</p>
-            <a href="/" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-2xl text-sm transition inline-block">Ir para Explorar Cursos</a>
-        </div>
+        <section>
+            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-play text-yellow-400 mr-2"></i> Minhas Missões em Andamento</h2>
+            <div id="progressGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-bookmark text-yellow-400 mr-2"></i> Missões Salvas</h2>
+            <div id="studentFavoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="studentEmptyState" class="hidden text-center py-12 bg-blue-900 rounded-3xl border-4 border-dashed border-blue-600">
+                <div class="text-yellow-400 text-5xl mb-3"><i class="fa-solid fa-ghost"></i></div>
+                <p class="text-sm text-blue-200 mb-4">Nenhuma missão salva ainda.</p>
+                <a href="/" class="bg-yellow-400 text-blue-950 font-black px-6 py-3 rounded-2xl text-sm uppercase inline-block">Explorar missões</a>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 text-center text-sm">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="mb-2 font-bold text-white text-base">Educa<span class="text-amber-400">+</span> &bull; Painel do Aluno</p>
-            <p>&copy; 2026 Todos os direitos reservados.</p>
-        </div>
+    <footer class="bg-blue-950 text-blue-300 py-8 border-t-4 border-yellow-400 text-center text-sm">
+        <p class="font-black text-white tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull; Painel do Jogador</p>
+        <p>&copy; 2026 UNIFIP - ADS</p>
     </footer>
 
+    <script src="{% static 'usuarios/js/script.js' %}"></script>
+    <script src="{% static 'usuarios/js/extras.js' %}"></script>
     <script>
-        // Script específico para renderizar na página aluno.html
         document.addEventListener('DOMContentLoaded', () => {
-            const currentUser = getCurrentUser();
-            if (!currentUser) {
-                alert('Você precisa estar logado para acessar o painel do aluno!');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            renderStudentFavoritesPage();
+            if (!getCurrentUser()) { queueToast('Entre para acessar seu painel!'); window.location.href = '/'; return; }
+            renderDashboard();
         });
 
-        function renderStudentFavoritesPage() {
+        function renderDashboard() {
+            const p = getProg(), s = stats(p), courses = getStoredCourses();
+            const card = (ico, label, val) => `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4"><i class="fa-solid ${ico} text-yellow-400"></i><p class="text-2xl font-black mt-1">${val}</p><p class="text-[10px] uppercase font-black text-blue-200">${label}</p></div>`;
+            document.getElementById('statCards').innerHTML =
+                card('fa-bolt', 'Nível · ' + (p.xp % 200) + '/200 XP', 'NV ' + s.level) +
+                card('fa-fire', 'Dias seguidos', s.streak) +
+                card('fa-flag-checkered', 'Missões concluídas', s.done) +
+                card('fa-star', 'XP total', p.xp);
+
+            document.getElementById('badgeGrid').innerHTML = BADGES.map(b => {
+                const on = p.badges.includes(b.id);
+                return `<div title="${esc(b.desc)}" class="rounded-2xl p-3 text-center border-2 ${on ? 'bg-yellow-400 text-blue-950 border-yellow-200' : 'bg-blue-900/60 text-blue-300 border-blue-700 opacity-60'}"><i class="fa-solid ${on ? b.ico : 'fa-lock'} text-xl"></i><p class="text-[11px] font-black uppercase mt-1">${esc(b.name)}</p><p class="text-[10px] font-semibold">${esc(b.desc)}</p></div>`;
+            }).join('');
+
+            const active = courses.filter(c => p.courses[c.id]);
+            document.getElementById('progressGrid').innerHTML = active.length ? active.map(c => {
+                const pr = p.courses[c.id];
+                return `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex items-center gap-4">
+                    <div class="flex-1"><p class="font-black text-sm">${esc(c.title)}</p>
+                    <div class="h-2 bg-blue-950 rounded-full overflow-hidden mt-2"><div class="h-full ${pr.done ? 'bg-emerald-400' : 'bg-yellow-400'}" style="width:${pr.pct}%"></div></div>
+                    <p class="text-[10px] uppercase font-black text-blue-200 mt-1">${pr.done ? '✔ Concluída' : pr.pct + '% completo'}</p></div>
+                    <a href="${esc(c.link)}" target="_blank" class="bg-yellow-400 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase">${pr.done ? 'Revisar' : 'Continuar'}</a></div>`;
+            }).join('') : '<p class="text-blue-200 text-sm">Inicie uma missão na página Explorar para ganhar XP.</p>';
+
+            const favs = courses.filter(c => getFavorites().includes(c.id));
             const grid = document.getElementById('studentFavoritesGrid');
-            const emptyState = document.getElementById('studentEmptyState');
-            const favorites = getFavorites();
-            const courses = getStoredCourses();
-            const favCourses = courses.filter(c => favorites.includes(c.id));
-
-            if (favCourses.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            grid.innerHTML = favCourses.map(course => `
-                <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all border border-slate-200 flex flex-col justify-between overflow-hidden p-6">
-                    <div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">${course.category}</span>
-                        <h3 class="text-lg font-bold text-slate-800 mt-3 mb-2">${course.title}</h3>
-                        <p class="text-slate-600 text-sm line-clamp-3 mb-4">${course.description}</p>
-                        <p class="text-xs text-slate-400 mb-4"><i class="fa-solid fa-chalkboard-user mr-1"></i> ${course.instructor}</p>
-                    </div>
-                    <div class="flex space-x-2 pt-2 border-t border-slate-100">
-                        <a href="${course.link}" target="_blank" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-semibold py-2.5 rounded-xl text-xs transition">Acessar Link</a>
-                        <button onclick="toggleFavorite('${course.id}'); renderStudentFavoritesPage();" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2.5 rounded-xl text-xs font-semibold transition" title="Remover dos favoritos"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
+            document.getElementById('studentEmptyState').classList.toggle('hidden', favs.length > 0);
+            grid.innerHTML = favs.map(c => `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex flex-col justify-between">
+                <div><span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">${esc(c.category)}</span>
+                <h3 class="font-black mt-2">${esc(c.title)}</h3><p class="text-xs text-blue-300">${esc(c.instructor)}</p></div>
+                <div class="flex gap-2 mt-4"><a href="${esc(c.link)}" target="_blank" class="flex-1 text-center bg-yellow-400 text-blue-950 py-2 rounded-xl text-xs font-black uppercase">Play</a>
+                <button onclick="toggleFavorite('${esc(c.id)}'); renderDashboard();" class="text-rose-400 px-2" title="Remover"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
         }
     </script>
-
-    <script src="{% static 'usuarios/js/script.js' %}"></script>
-
 </body>
 </html>

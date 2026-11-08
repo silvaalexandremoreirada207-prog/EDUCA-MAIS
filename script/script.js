@@ -179,14 +179,14 @@ const defaultUsers = [
 function getStoredCourses() {
     const stored = localStorage.getItem('educa_plus_courses_v12');
     if (!stored) {
-        localStorage.setItem('educa_plus_courses_v11', JSON.stringify(defaultCourses));
+        localStorage.setItem('educa_plus_courses_v12', JSON.stringify(defaultCourses));
         return defaultCourses;
     }
     return JSON.parse(stored);
 }
 
 function saveCourses(courses) {
-    localStorage.setItem('educa_plus_courses_v11', JSON.stringify(courses));
+    localStorage.setItem('educa_plus_courses_v12', JSON.stringify(courses));
 }
 
 function toggleMobileMenu() {
@@ -329,7 +329,7 @@ function handleRegister(e) {
 
     let users = getRegisteredUsers();
     if (users.some(u => u.email === email)) {
-        alert('Este e-mail já está cadastrado!');
+        toast('Este e-mail já está cadastrado!');
         return;
     }
 
@@ -341,7 +341,7 @@ function handleRegister(e) {
     closeAuthModal();
     updateAuthUI();
     if (document.getElementById('coursesGrid')) renderStudentCourses();
-    alert(`Conta criada com sucesso! Bem-vindo(a), ${name}.`);
+    queueToast(`Conta criada com sucesso! Bem-vindo(a), ${name}.`);
     
     if (role === 'professor') {
         window.location.href = 'professor.html';
@@ -359,7 +359,7 @@ function handleLogin(e) {
     const user = users.find(u => u.email === email && u.password === password);
 
     if (!user) {
-        alert('E-mail ou senha incorretos!');
+        toast('E-mail ou senha incorretos!');
         return;
     }
 
@@ -367,7 +367,7 @@ function handleLogin(e) {
     closeAuthModal();
     updateAuthUI();
     if (document.getElementById('coursesGrid')) renderStudentCourses();
-    alert(`Login efetuado com sucesso! Olá, ${user.name}.`);
+    queueToast(`Login efetuado com sucesso! Olá, ${user.name}.`);
 
     if (user.role === 'professor') {
         window.location.href = 'professor.html';
@@ -380,7 +380,7 @@ function logoutUser() {
     localStorage.removeItem('educa_plus_current_user');
     updateAuthUI();
     if (document.getElementById('coursesGrid')) renderStudentCourses();
-    alert('Você saiu da sua conta.');
+    queueToast('Você saiu da sua conta.');
     window.location.href = 'index.html';
 }
 
@@ -443,10 +443,10 @@ function renderStudentCourses() {
         return `
             <div class="bg-blue-900 rounded-3xl shadow-xl hover:shadow-2xl transition-all border-2 border-blue-600 flex flex-col justify-between overflow-hidden group">
                 <div class="relative h-48 w-full overflow-hidden bg-slate-900 border-b-2 border-blue-600">
-                    <img src="${courseImg}" alt="${course.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90">
+                    <img src="${courseImg}" alt="${esc(course.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90">
                     <div class="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent"></div>
                     <div class="absolute top-3 left-3">
-                        <span class="text-[10px] font-black uppercase tracking-wider bg-yellow-400 text-blue-950 px-3 py-1 rounded-full shadow">${course.category}</span>
+                        <span class="text-[10px] font-black uppercase tracking-wider bg-yellow-400 text-blue-950 px-3 py-1 rounded-full shadow">${esc(course.category)}</span>
                     </div>
                     <div class="absolute top-3 right-3">
                         <button onclick="toggleFavorite('${course.id}')" title="Salvar nos favoritos" class="bg-blue-950/90 backdrop-blur-sm w-9 h-9 rounded-full flex items-center justify-center text-yellow-400 hover:text-white transition shadow border border-yellow-400 ${isFav ? 'bg-yellow-400 text-blue-950' : ''}"><i class="fa-solid fa-bookmark"></i></button>
@@ -455,15 +455,15 @@ function renderStudentCourses() {
                 <div class="p-6 flex-grow flex flex-col justify-between">
                     <div>
                         <div class="flex items-center space-x-2 text-xs text-blue-200 mb-2 font-bold">
-                            <span class="bg-blue-950 px-2.5 py-0.5 rounded-full border border-blue-700">${course.level}</span>
+                            <span class="bg-blue-950 px-2.5 py-0.5 rounded-full border border-blue-700">${esc(course.level)}</span>
                             <span>&bull;</span>
                             <span><i class="fa-solid fa-star text-yellow-400 mr-0.5"></i> ${course.rating || '4.8'}</span>
                         </div>
-                        <h3 class="text-lg font-black text-white mb-2 group-hover:text-yellow-400 transition leading-snug">${course.title}</h3>
-                        <p class="text-blue-100 text-sm line-clamp-2 mb-4 font-medium">${course.description}</p>
+                        <h3 class="text-lg font-black text-white mb-2 group-hover:text-yellow-400 transition leading-snug">${esc(course.title)}</h3>
+                        <p class="text-blue-100 text-sm line-clamp-2 mb-4 font-medium">${esc(course.description)}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-blue-300 mb-4 font-semibold"><i class="fa-solid fa-chalkboard-user mr-1 text-yellow-400"></i> ${course.instructor}</p>
+                        <p class="text-xs text-blue-300 mb-4 font-semibold"><i class="fa-solid fa-chalkboard-user mr-1 text-yellow-400"></i> ${esc(course.instructor)}</p>
                         <button onclick="openCourseModal('${course.id}')" class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black py-3 rounded-2xl transition flex items-center justify-center space-x-2 text-sm shadow uppercase tracking-wider">
                             <i class="fa-solid fa-play text-xs"></i>
                             <span>Play / Ver Direção</span>
@@ -479,7 +479,7 @@ function toggleFavorite(courseId) {
     const currentUser = getCurrentUser();
     
     if (!currentUser) {
-        alert('Você precisa estar logado para adicionar missões aos favoritos!');
+        toast('Você precisa estar logado para adicionar missões aos favoritos!');
         openAuthModal('login');
         return;
     }
@@ -498,7 +498,7 @@ function toggleFavoritosModal() {
     const currentUser = getCurrentUser();
 
     if (!currentUser) {
-        alert('Você precisa estar logado para ver suas missões favoritas!');
+        toast('Você precisa estar logado para ver suas missões favoritas!');
         openAuthModal('login');
         return;
     }
@@ -515,9 +515,9 @@ function toggleFavoritosModal() {
         list.innerHTML = favCourses.map(course => `
             <div class="bg-blue-900 border-2 border-blue-700 p-4 rounded-2xl flex justify-between items-center">
                 <div>
-                    <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">${course.category}</span>
-                    <h4 class="font-black text-white text-sm mt-1">${course.title}</h4>
-                    <p class="text-xs text-blue-300">${course.instructor}</p>
+                    <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">${esc(course.category)}</span>
+                    <h4 class="font-black text-white text-sm mt-1">${esc(course.title)}</h4>
+                    <p class="text-xs text-blue-300">${esc(course.instructor)}</p>
                 </div>
                 <div class="flex space-x-2">
                     <a href="${course.link}" target="_blank" class="bg-yellow-400 text-blue-950 px-3 py-1.5 rounded-xl text-xs font-black uppercase shadow">Play</a>
@@ -539,12 +539,12 @@ function openCourseModal(courseId) {
         <div class="h-40 -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-4 overflow-hidden relative rounded-t-3xl border-b-2 border-yellow-400">
             <img src="${course.image || 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80'}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-blue-950/60"></div>
-            <span class="absolute bottom-3 left-4 text-xs font-black uppercase tracking-wider bg-yellow-400 text-blue-950 px-3 py-1 rounded-full shadow">${course.category}</span>
+            <span class="absolute bottom-3 left-4 text-xs font-black uppercase tracking-wider bg-yellow-400 text-blue-950 px-3 py-1 rounded-full shadow">${esc(course.category)}</span>
         </div>
-        <h2 class="text-2xl font-black text-white uppercase mb-1">${course.title}</h2>
-        <p class="text-xs text-yellow-300 mb-4 flex items-center font-bold"><i class="fa-solid fa-chalkboard-user mr-1.5"></i> ${course.instructor}</p>
+        <h2 class="text-2xl font-black text-white uppercase mb-1">${esc(course.title)}</h2>
+        <p class="text-xs text-yellow-300 mb-4 flex items-center font-bold"><i class="fa-solid fa-chalkboard-user mr-1.5"></i> ${esc(course.instructor)}</p>
         <div class="bg-blue-900 p-4 rounded-2xl border-2 border-blue-700 mb-6">
-            <p class="text-sm text-blue-100 font-medium">${course.description}</p>
+            <p class="text-sm text-blue-100 font-medium">${esc(course.description)}</p>
         </div>
         <div class="space-y-3">
             <a href="${course.link}" target="_blank" class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black py-3.5 rounded-2xl shadow uppercase tracking-wider transition flex items-center justify-center space-x-2 text-sm">
@@ -560,3 +560,4 @@ function openCourseModal(courseId) {
 function closeModal() {
     document.getElementById('courseModal').classList.add('hidden');
 }
+function queueToast(m){const q=JSON.parse(sessionStorage.getItem('toastq')||'[]');q.push(m);sessionStorage.setItem('toastq',JSON.stringify(q));}

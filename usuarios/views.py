@@ -20,7 +20,6 @@ def home(request):
     return render(request, "usuarios/home.html", {"cursos": cursos})
 
 
-@login_required
 def aluno(request):
     """
     Área do aluno. Exige que o usuário esteja logado.
@@ -37,7 +36,6 @@ def aluno(request):
     return render(request, "usuarios/aluno.html", context)
 
 
-@login_required
 def professor(request):
     """
     Área do professor. Exige login.
