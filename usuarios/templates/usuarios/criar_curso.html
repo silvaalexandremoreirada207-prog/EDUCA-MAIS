@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educa+ | Criar Curso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-blue-700 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-blue-950 text-white rounded-3xl max-w-2xl w-full p-8 border-4 border-yellow-400 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-black uppercase text-yellow-400">Nova Missão</h1>
+                <p class="text-xs text-blue-200 mt-1">Preencha os dados do curso e link do YouTube</p>
+            </div>
+            <a href="{% url 'professor' %}"
+                class="text-blue-300 hover:text-white bg-blue-900 w-8 h-8 rounded-full flex items-center justify-center font-bold"><i
+                    class="fa-solid fa-xmark"></i></a>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="bg-rose-900 text-rose-200 p-3 rounded-xl mb-4 text-sm">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Título da Fase / Curso</label>
+                <input type="text" name="titulo" required placeholder="Ex: Fase 5: Node.js Avançado"
+                    class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Categoria / Mundo</label>
+                    <select name="categoria"
+                        class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                        <option value="Programação">Programação</option>
+                        <option value="Tecnologia">Tecnologia</option>
+                        <option value="Design">Design</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Nível</label>
+                    <select name="nivel"
+                        class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+                        <option value="Iniciante">Iniciante</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Instrutor / Equipe</label>
+                <input type="text" name="instrutor" required placeholder="Ex: Prof. Alexandre Moreira"
+                    class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Link do YouTube (Playlist /
+                    Aula)</label>
+                <input type="url" name="link" required placeholder="https://www.youtube.com/watch?v=..."
+                    class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">URL da Imagem / Banner
+                    (Opcional)</label>
+                <input type="url" name="imagem" placeholder="https://images.unsplash.com/..."
+                    class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Descrição</label>
+                <textarea name="descricao" rows="3" required placeholder="Resumo do conteúdo..."
+                    class="w-full bg-blue-900 border-2 border-blue-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400"></textarea>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black py-4 rounded-xl shadow uppercase tracking-wider transition">
+                Salvar Missão
+            </button>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -33,6 +33,16 @@ class Curso(models.Model):
         INTERMEDIARIO = "Intermediário", "Intermediário"
         AVANCADO = "Avançado", "Avançado"
 
+    # NOVA LINHA: Vincula o curso ao professor que o criou
+    criador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="cursos_criados",
+        null=True,
+        blank=True,
+        verbose_name="Criado por",
+    )
+    
     titulo = models.CharField(max_length=200)
     instrutor = models.CharField(max_length=150)
     categoria = models.CharField(max_length=100)

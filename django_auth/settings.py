@@ -1,8 +1,13 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = "chave-de-desenvolvimento-altere-antes-de-publicar"
-DEBUG = True
+
+SECRET_KEY = os.getenv("SECRET_KEY", "chave-dev-fallback")
+DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -38,7 +43,18 @@ TEMPLATES = [{
 }]
 WSGI_APPLICATION = "django_auth.wsgi.application"
 ASGI_APPLICATION = "django_auth.asgi.application"
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", "educa_mais"),
+        "USER": os.getenv("DB_USER", "postgres"),
+        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = []
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Recife"
@@ -46,3 +62,10 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ==========================================
+# AUTENTICAÇÃO E REDIRECIONAMENTOS
+# ==========================================
+LOGIN_URL = "login"           # para onde @login_required manda se não logado
+LOGIN_REDIRECT_URL = "landing"      # (fallback) destino padrão após login
+LOGOUT_REDIRECT_URL = "landing"     # para onde ir após logout

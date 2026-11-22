@@ -1,99 +1,152 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educa+ | Painel do Jogador</title>
+    <title>Educa+ | Painel do Aluno</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body class="bg-blue-700 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Cabeçalho -->
     <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="/" class="flex items-center space-x-3">
-                <div class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl border-2 border-yellow-200"><i class="fa-solid fa-graduation-cap"></i></div>
-                <span class="text-2xl font-black tracking-wider uppercase">Educa<span class="text-yellow-400">+</span></span>
+            <a href="{% url 'landing' %}" class="flex items-center space-x-3">
+                <div
+                    class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl border-2 border-yellow-200">
+                    <i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="text-2xl font-black tracking-wider uppercase">Educa<span
+                        class="text-yellow-400">+</span></span>
             </a>
-            <div id="userProfileSection" class="flex items-center space-x-3 bg-blue-950 px-3 py-1.5 rounded-2xl border-2 border-blue-600">
-                <div class="w-8 h-8 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-xs" id="userInitial">A</div>
-                <div><p class="text-xs font-bold leading-tight" id="userNameDisplay">Nome</p><p class="text-[10px] text-yellow-400 font-black uppercase" id="userRoleDisplay">Aluno</p></div>
-                <a href="/" title="Explorar" class="text-yellow-400 ml-2"><i class="fa-solid fa-compass"></i></a>
-                <button onclick="logoutUser()" title="Sair" class="text-blue-200 hover:text-rose-400 ml-1"><i class="fa-solid fa-power-off"></i></button>
+            <div class="flex items-center space-x-3 bg-blue-950 px-3 py-1.5 rounded-2xl border-2 border-blue-600">
+                <div
+                    class="w-8 h-8 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-xs uppercase">
+                    {{ request.user.username|first }}
+                </div>
+                <div>
+                    <p class="text-xs font-bold leading-tight">{{ request.user.username }}</p>
+                    <p class="text-[10px] text-yellow-400 font-black uppercase">Aluno</p>
+                </div>
+                <a href="{% url 'home' %}" title="Explorar Cursos"
+                    class="text-yellow-400 ml-2 hover:scale-110 transition"><i class="fa-solid fa-compass"></i></a>
+                <a href="{% url 'logout' %}" title="Sair" class="text-blue-200 hover:text-rose-400 ml-1"><i
+                        class="fa-solid fa-power-off"></i></a>
             </div>
         </div>
     </header>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10 text-white">
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4" id="statCards"></section>
 
-        <section>
-            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-trophy text-yellow-400 mr-2"></i> Conquistas</h2>
-            <div id="badgeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+        <!-- Cards de Estatísticas -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
+                <i class="fa-solid fa-bolt text-yellow-400"></i>
+                <p class="text-2xl font-black mt-1">NV 1</p>
+                <p class="text-[10px] uppercase font-black text-blue-200">Nível</p>
+            </div>
+            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
+                <i class="fa-solid fa-fire text-yellow-400"></i>
+                <p class="text-2xl font-black mt-1">0</p>
+                <p class="text-[10px] uppercase font-black text-blue-200">Dias seguidos</p>
+            </div>
+            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
+                <i class="fa-solid fa-flag-checkered text-yellow-400"></i>
+                <p class="text-2xl font-black mt-1">{{ matriculas.count }}</p>
+                <p class="text-[10px] uppercase font-black text-blue-200">Matrículas</p>
+            </div>
+            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
+                <i class="fa-solid fa-star text-yellow-400"></i>
+                <p class="text-2xl font-black mt-1">{{ favoritos.count }}</p>
+                <p class="text-[10px] uppercase font-black text-blue-200">Favoritos</p>
+            </div>
         </section>
 
+        <!-- Minhas Missões em Andamento -->
         <section>
-            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-play text-yellow-400 mr-2"></i> Minhas Missões em Andamento</h2>
-            <div id="progressGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i
+                    class="fa-solid fa-play text-yellow-400 mr-2"></i> Minhas Missões em Andamento</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for matricula in matriculas %}
+                <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex items-center gap-4">
+                    <div class="flex-1">
+                        <p class="font-black text-sm">{{ matricula.curso.titulo }}</p>
+                        <div class="h-2 bg-blue-950 rounded-full overflow-hidden mt-2">
+                            {% if matricula.concluido %}
+                            <div class="h-full bg-emerald-400" style="width: 100%"></div>
+                            {% else %}
+                            <div class="h-full bg-yellow-400" style="width: {{ matricula.progresso }}%"></div>
+                            {% endif %}
+                        </div>
+                        <p class="text-[10px] uppercase font-black text-blue-200 mt-1">
+                            {% if matricula.concluido %}
+                            ✔ Concluída
+                            {% else %}
+                            {{ matricula.progresso }}% completo
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{{ matricula.curso.link }}" target="_blank"
+                        class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase transition">
+                        {% if matricula.concluido %}
+                        Revisar
+                        {% else %}
+                        Continuar
+                        {% endif %}
+                    </a>
+                </div>
+                {% empty %}
+                <p class="text-blue-200 text-sm col-span-2">Você ainda não se matriculou em nenhuma missão. <a
+                        href="{% url 'home' %}" class="text-yellow-400 underline">Explore os cursos!</a></p>
+                {% endfor %}
+            </div>
         </section>
 
+        <!-- Favoritos -->
         <section>
-            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i class="fa-solid fa-bookmark text-yellow-400 mr-2"></i> Missões Salvas</h2>
-            <div id="studentFavoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            <div id="studentEmptyState" class="hidden text-center py-12 bg-blue-900 rounded-3xl border-4 border-dashed border-blue-600">
-                <div class="text-yellow-400 text-5xl mb-3"><i class="fa-solid fa-ghost"></i></div>
-                <p class="text-sm text-blue-200 mb-4">Nenhuma missão salva ainda.</p>
-                <a href="/" class="bg-yellow-400 text-blue-950 font-black px-6 py-3 rounded-2xl text-sm uppercase inline-block">Explorar missões</a>
+            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i
+                    class="fa-solid fa-bookmark text-yellow-400 mr-2"></i> Missões Salvas</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for favorito in favoritos %}
+                <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">
+                            {{ favorito.curso.categoria }}
+                        </span>
+                        <h3 class="font-black mt-2">{{ favorito.curso.titulo }}</h3>
+                        <p class="text-xs text-blue-300">{{ favorito.curso.instrutor }}</p>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <a href="{{ favorito.curso.link }}" target="_blank"
+                            class="flex-1 text-center bg-yellow-400 hover:bg-yellow-500 text-blue-950 py-2 rounded-xl text-xs font-black uppercase transition">Play</a>
+                        <a href="{% url 'favoritar_curso' favorito.curso.id %}"
+                            class="text-rose-400 hover:text-rose-300 px-2 flex items-center"
+                            title="Remover dos favoritos"><i class="fa-solid fa-trash"></i></a>
+                    </div>
+                </div>
+                {% empty %}
+                <div
+                    class="col-span-full text-center py-12 bg-blue-900 rounded-3xl border-4 border-dashed border-blue-600">
+                    <div class="text-yellow-400 text-5xl mb-3"><i class="fa-solid fa-ghost"></i></div>
+                    <p class="text-sm text-blue-200 mb-4">Nenhuma missão salva ainda.</p>
+                    <a href="{% url 'home' %}"
+                        class="bg-yellow-400 text-blue-950 font-black px-6 py-3 rounded-2xl text-sm uppercase inline-block hover:bg-yellow-500 transition">
+                        Explorar missões
+                    </a>
+                </div>
+                {% endfor %}
             </div>
         </section>
     </main>
 
     <footer class="bg-blue-950 text-blue-300 py-8 border-t-4 border-yellow-400 text-center text-sm">
-        <p class="font-black text-white tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull; Painel do Jogador</p>
+        <p class="font-black text-white tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull;
+            Painel do Aluno</p>
         <p>&copy; 2026 UNIFIP - ADS</p>
     </footer>
-
-    <script src="{% static 'usuarios/js/script.js' %}"></script>
-    <script src="{% static 'usuarios/js/extras.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!getCurrentUser()) { queueToast('Entre para acessar seu painel!'); window.location.href = '/'; return; }
-            renderDashboard();
-        });
-
-        function renderDashboard() {
-            const p = getProg(), s = stats(p), courses = getStoredCourses();
-            const card = (ico, label, val) => `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4"><i class="fa-solid ${ico} text-yellow-400"></i><p class="text-2xl font-black mt-1">${val}</p><p class="text-[10px] uppercase font-black text-blue-200">${label}</p></div>`;
-            document.getElementById('statCards').innerHTML =
-                card('fa-bolt', 'Nível · ' + (p.xp % 200) + '/200 XP', 'NV ' + s.level) +
-                card('fa-fire', 'Dias seguidos', s.streak) +
-                card('fa-flag-checkered', 'Missões concluídas', s.done) +
-                card('fa-star', 'XP total', p.xp);
-
-            document.getElementById('badgeGrid').innerHTML = BADGES.map(b => {
-                const on = p.badges.includes(b.id);
-                return `<div title="${esc(b.desc)}" class="rounded-2xl p-3 text-center border-2 ${on ? 'bg-yellow-400 text-blue-950 border-yellow-200' : 'bg-blue-900/60 text-blue-300 border-blue-700 opacity-60'}"><i class="fa-solid ${on ? b.ico : 'fa-lock'} text-xl"></i><p class="text-[11px] font-black uppercase mt-1">${esc(b.name)}</p><p class="text-[10px] font-semibold">${esc(b.desc)}</p></div>`;
-            }).join('');
-
-            const active = courses.filter(c => p.courses[c.id]);
-            document.getElementById('progressGrid').innerHTML = active.length ? active.map(c => {
-                const pr = p.courses[c.id];
-                return `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex items-center gap-4">
-                    <div class="flex-1"><p class="font-black text-sm">${esc(c.title)}</p>
-                    <div class="h-2 bg-blue-950 rounded-full overflow-hidden mt-2"><div class="h-full ${pr.done ? 'bg-emerald-400' : 'bg-yellow-400'}" style="width:${pr.pct}%"></div></div>
-                    <p class="text-[10px] uppercase font-black text-blue-200 mt-1">${pr.done ? '✔ Concluída' : pr.pct + '% completo'}</p></div>
-                    <a href="${esc(c.link)}" target="_blank" class="bg-yellow-400 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase">${pr.done ? 'Revisar' : 'Continuar'}</a></div>`;
-            }).join('') : '<p class="text-blue-200 text-sm">Inicie uma missão na página Explorar para ganhar XP.</p>';
-
-            const favs = courses.filter(c => getFavorites().includes(c.id));
-            const grid = document.getElementById('studentFavoritesGrid');
-            document.getElementById('studentEmptyState').classList.toggle('hidden', favs.length > 0);
-            grid.innerHTML = favs.map(c => `<div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex flex-col justify-between">
-                <div><span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">${esc(c.category)}</span>
-                <h3 class="font-black mt-2">${esc(c.title)}</h3><p class="text-xs text-blue-300">${esc(c.instructor)}</p></div>
-                <div class="flex gap-2 mt-4"><a href="${esc(c.link)}" target="_blank" class="flex-1 text-center bg-yellow-400 text-blue-950 py-2 rounded-xl text-xs font-black uppercase">Play</a>
-                <button onclick="toggleFavorite('${esc(c.id)}'); renderDashboard();" class="text-rose-400 px-2" title="Remover"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
-        }
-    </script>
 </body>
+
 </html>
