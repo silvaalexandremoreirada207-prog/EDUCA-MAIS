@@ -12,5 +12,6 @@ urlpatterns = [
     # ações
     path("favoritar/<int:curso_id>/", views.favoritar_curso, name="favoritar_curso"),
     path("matricular/<int:curso_id>/", views.matricular_curso, name="matricular_curso"),
+    path("continuar/<int:curso_id>/", views.continuar_curso, name="continuar_curso"),
     path("criar-curso/", views.criar_curso, name="criar_curso"),
 ]

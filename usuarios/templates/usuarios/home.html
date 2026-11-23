@@ -107,8 +107,15 @@
                         {% if request.user.is_authenticated and request.user.perfil.tipo == 'aluno' %}
                         <div class="grid grid-cols-2 gap-2">
                             <a href="{% url 'favoritar_curso' curso.id %}"
-                                class="bg-blue-950 hover:bg-blue-800 text-yellow-400 border border-yellow-400/50 py-2.5 rounded-xl text-xs font-black uppercase text-center transition flex items-center justify-center gap-2"><i
-                                    class="fa-solid fa-bookmark"></i> Salvar</a>
+                                title="{% if curso.id in favoritos_ids %}Remover dos favoritos{% else %}Salvar nos favoritos{% endif %}"
+                                aria-pressed="{% if curso.id in favoritos_ids %}true{% else %}false{% endif %}"
+                                class="{% if curso.id in favoritos_ids %}bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-300{% else %}bg-blue-950 hover:bg-blue-800 text-yellow-400 border border-yellow-400/50{% endif %} py-2.5 rounded-xl text-xs font-black uppercase text-center transition flex items-center justify-center gap-2">
+                                {% if curso.id in favoritos_ids %}
+                                <i class="fa-solid fa-bookmark"></i> Salvo
+                                {% else %}
+                                <i class="fa-regular fa-bookmark"></i> Salvar
+                                {% endif %}
+                            </a>
                             <a href="{% url 'matricular_curso' curso.id %}"
                                 class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 py-2.5 rounded-xl text-xs font-black uppercase text-center transition flex items-center justify-center gap-2"><i
                                     class="fa-solid fa-play"></i> Iniciar</a>

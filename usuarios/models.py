@@ -21,6 +21,8 @@ class Perfil(models.Model):
         choices=TipoUsuario.choices,
         default=TipoUsuario.ALUNO,
     )
+    # Pontuação acumulada do aluno (XP), armazenada no PostgreSQL.
+    pontos = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.usuario.username} - {self.get_tipo_display()}"

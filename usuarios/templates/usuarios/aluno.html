@@ -41,12 +41,20 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10 text-white">
 
+        <!-- Atalho visível para voltar ao catálogo de cursos -->
+        <div class="flex justify-end">
+            <a href="{% url 'home' %}"
+                class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-5 py-3 rounded-xl font-black text-sm uppercase shadow-lg transition">
+                <i class="fa-solid fa-arrow-left"></i> Voltar aos cursos
+            </a>
+        </div>
+
         <!-- Cards de Estatísticas -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
                 <i class="fa-solid fa-bolt text-yellow-400"></i>
-                <p class="text-2xl font-black mt-1">NV 1</p>
-                <p class="text-[10px] uppercase font-black text-blue-200">Nível</p>
+                <p class="text-2xl font-black mt-1">NV {{ nivel_aluno }}</p>
+                <p class="text-[10px] uppercase font-black text-blue-200">Nível • {{ pontos }} XP</p>
             </div>
             <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
                 <i class="fa-solid fa-fire text-yellow-400"></i>
@@ -89,14 +97,17 @@
                             {% endif %}
                         </p>
                     </div>
-                    <a href="{{ matricula.curso.link }}" target="_blank"
-                        class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase transition">
-                        {% if matricula.concluido %}
-                        Revisar
-                        {% else %}
-                        Continuar
-                        {% endif %}
-                    </a>
+                    <form method="post" action="{% url 'continuar_curso' matricula.curso.id %}" target="_blank">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase transition">
+                            {% if matricula.concluido %}
+                            Revisar
+                            {% else %}
+                            Continuar (+10 XP)
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
                 {% empty %}
                 <p class="text-blue-200 text-sm col-span-2">Você ainda não se matriculou em nenhuma missão. <a

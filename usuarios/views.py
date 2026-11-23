@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import transaction
 from .models import Curso, Favorito, Matricula, Perfil
 
 
@@ -38,7 +39,15 @@ def home(request):
     :template:`usuarios/home.html`
     """
     cursos = Curso.objects.filter(ativo=True)
-    return render(request, "usuarios/home.html", {"cursos": cursos})
+    favoritos_ids = set()
+    if request.user.is_authenticated and hasattr(request.user, "perfil") and request.user.perfil.tipo == "aluno":
+        favoritos_ids = set(
+            Favorito.objects.filter(usuario=request.user).values_list("curso_id", flat=True)
+        )
+    return render(request, "usuarios/home.html", {
+        "cursos": cursos,
+        "favoritos_ids": favoritos_ids,
+    })
 
 
 @login_required
@@ -62,9 +71,15 @@ def aluno(request):
     favoritos = Favorito.objects.filter(usuario=request.user).select_related("curso")
     matriculas = Matricula.objects.filter(aluno=request.user).select_related("curso")
 
+    # Pontuação e nível do aluno conectado (200 XP por nível).
+    pontos = request.user.perfil.pontos
+    nivel_aluno = (pontos // 200) + 1
+
     return render(request, "usuarios/aluno.html", {
         "favoritos": favoritos,
         "matriculas": matriculas,
+        "pontos": pontos,
+        "nivel_aluno": nivel_aluno,
     })
 
 
@@ -222,6 +237,41 @@ def matricular_curso(request, curso_id):
         messages.warning(request, "Você já está matriculado neste curso.")
 
     return redirect("aluno")
+
+
+@login_required
+def continuar_curso(request, curso_id):
+    """Registra uma etapa de estudo e depois abre a playlist do curso.
+
+    Cada clique válido acrescenta 10% e 10 XP, até 100%. A conclusão
+    concede um bônus único de 100 XP.
+    """
+    if request.method != "POST":
+        return redirect("aluno")
+
+    if not hasattr(request.user, "perfil") or request.user.perfil.tipo != "aluno":
+        messages.error(request, "Apenas alunos podem registrar progresso.")
+        return redirect("landing")
+
+    curso = get_object_or_404(Curso, id=curso_id)
+    with transaction.atomic():
+        matricula = get_object_or_404(
+            Matricula.objects.select_for_update(), aluno=request.user, curso=curso
+        )
+        perfil = Perfil.objects.select_for_update().get(usuario=request.user)
+
+        if not matricula.concluido:
+            novo_progresso = min(100, matricula.progresso + 10)
+            ganho = novo_progresso - matricula.progresso
+            matricula.progresso = novo_progresso
+            matricula.concluido = novo_progresso >= 100
+            matricula.save(update_fields=["progresso", "concluido", "atualizado_em"])
+            perfil.pontos += ganho
+            if matricula.concluido:
+                perfil.pontos += 100
+            perfil.save(update_fields=["pontos"])
+
+    return redirect(curso.link)
 
 
 # ==========================================

@@ -1,0 +1,19 @@
+CORREÇÃO: NÍVEL E XP NO PAINEL DO ALUNO
+
+1. Faça uma cópia de segurança do arquivo usuarios/views.py.
+2. Copie o arquivo usuarios/views.py deste pacote para a pasta usuarios do seu projeto, substituindo o arquivo atual.
+   Este arquivo mantém as correções integradas anteriores (favoritos e continuar curso) e acrescenta o envio de pontos e nível ao painel.
+3. Abra usuarios/templates/usuarios/aluno.html e localize o primeiro card de estatísticas.
+   Troque:
+       <p class="text-2xl font-black mt-1">NV 1</p>
+       <p class="text-[10px] uppercase font-black text-blue-200">Nível</p>
+   Por:
+       <p class="text-2xl font-black mt-1">NV {{ nivel_aluno }}</p>
+       <p class="text-[10px] uppercase font-black text-blue-200">Nível • {{ pontos }} XP</p>
+
+4. Salve os arquivos e execute:
+       python manage.py check
+       python manage.py runserver
+
+Não precisa executar migrate para esta alteração, desde que a alteração anterior que adicionou Perfil.pontos já tenha sido aplicada.
+O nível é calculado como 1 + (XP inteiro dividido por 200).
