@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Curso, Favorito, Matricula, Perfil
+from .models import Atividade, Curso, Favorito, Matricula, Perfil, RespostaAtividade
 
 
 @admin.register(Curso)
@@ -27,3 +27,17 @@ class MatriculaAdmin(admin.ModelAdmin):
     list_display = ("aluno", "curso", "progresso", "concluido", "matriculado_em")
     list_filter = ("concluido",)
     search_fields = ("aluno__username", "curso__titulo")
+
+
+@admin.register(Atividade)
+class AtividadeAdmin(admin.ModelAdmin):
+    list_display = ("pergunta", "curso", "nivel", "resposta_correta", "criada_em")
+    list_filter = ("nivel", "curso")
+    search_fields = ("pergunta", "curso__titulo")
+
+
+@admin.register(RespostaAtividade)
+class RespostaAtividadeAdmin(admin.ModelAdmin):
+    list_display = ("aluno", "atividade", "opcao_escolhida", "correta", "pontos_recebidos", "enviada_em")
+    list_filter = ("correta", "atividade__nivel")
+    search_fields = ("aluno__username", "atividade__pergunta", "atividade__curso__titulo")

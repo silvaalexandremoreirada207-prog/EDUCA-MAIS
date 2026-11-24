@@ -1,163 +1,177 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educa+ | Painel do Aluno</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Educa+ | Meu perfil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--navy:#03123D;--blue:#1748B8;--yellow:#FFD21F;--bg:#F4F7FC;--text:#152344;--muted:#71809E;--line:#E4EAF4;--white:#fff}
+        *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+        a{text-decoration:none}.container{width:min(1120px,calc(100% - 40px));margin:auto}
+        .header{background:var(--navy);color:white;position:sticky;top:0;z-index:20;box-shadow:0 5px 18px #03123d22}
+        .header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+        .brand{display:flex;align-items:center;gap:11px;color:white;font-size:24px;font-weight:900;letter-spacing:.5px}
+        .brand-mark{width:42px;height:42px;border-radius:14px;background:var(--yellow);color:var(--navy);display:grid;place-items:center;border:2px solid #ffe989;font-size:19px}
+        .brand-plus{color:var(--yellow)}.header-actions{display:flex;align-items:center;gap:12px}
+        .nav-link{color:white;border:1px solid #ffffff30;border-radius:12px;padding:10px 14px;font-size:12px;font-weight:800;text-transform:uppercase;transition:.2s}
+        .nav-link:hover{background:#ffffff12;border-color:var(--yellow)}
+        .user-chip{display:flex;align-items:center;gap:10px;padding:6px 12px 6px 7px;border:1px solid #ffffff35;border-radius:15px;background:#ffffff0b}
+        .avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:var(--navy);font-weight:900;font-size:12px;text-transform:uppercase}
+        .user-name{font-size:12px;font-weight:800;line-height:1.2}.user-role{font-size:10px;color:var(--yellow);font-weight:900;text-transform:uppercase;margin-top:2px}
+        .logout{color:#c7d3ee;margin-left:4px}.logout:hover{color:#ff8b9c}
+        main{flex:1;padding:38px 0 58px}.page-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px}
+        .eyebrow{color:var(--blue);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+        h1{font-size:clamp(25px,4vw,34px);color:var(--navy);margin:6px 0 0;font-weight:950}
+        .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 16px;font-size:11px;font-weight:900;text-transform:uppercase;transition:.2s;border:0;cursor:pointer}
+        .btn-primary{background:var(--yellow);color:var(--navy);box-shadow:0 5px 12px #e4bd3028}.btn-primary:hover{background:#f2c400;transform:translateY(-1px)}
+        .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:34px}
+        .stat{background:white;border:1px solid var(--line);border-radius:19px;padding:19px;box-shadow:0 7px 20px #102b5b08}
+        .stat-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#fff5c9;color:#9b7600;font-size:16px}
+        .stat-value{font-size:25px;font-weight:950;color:var(--navy);margin:11px 0 2px}.stat-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+        .section{margin-top:32px}.section-heading{display:flex;align-items:center;gap:10px;color:var(--navy);font-size:18px;font-weight:950;text-transform:uppercase;margin:0 0 16px}
+        .section-heading i{color:var(--blue)}.mission-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+        .mission{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;align-items:center;gap:16px;box-shadow:0 6px 18px #102b5b08}
+        .mission-symbol{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:#edf3ff;color:var(--blue);display:grid;place-items:center;font-size:17px}
+        .mission-info{flex:1;min-width:0}.mission-title{font-size:14px;font-weight:900;color:var(--navy);margin:0 0 9px}
+        .progress-track{height:8px;background:#edf1f7;border-radius:99px;overflow:hidden}.progress-fill{height:100%;background:var(--yellow);border-radius:99px}
+        .progress-label{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:7px}
+        .btn-small{background:var(--navy);color:white;border-radius:10px;padding:10px 12px;font-size:10px;white-space:nowrap}.btn-small:hover{background:var(--blue)}
+        .favorites{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+        .favorite{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;min-height:180px;box-shadow:0 6px 18px #102b5b08}
+        .tag{display:inline-block;background:#fff4bf;color:#6b5200;padding:6px 9px;border-radius:8px;font-size:10px;font-weight:900;text-transform:uppercase}
+        .favorite h3{font-size:15px;color:var(--navy);font-weight:900;margin:12px 0 5px}.favorite p{font-size:11px;color:var(--muted);margin:0}
+        .favorite-actions{display:flex;gap:9px;margin-top:18px}.favorite-actions .btn{flex:1;padding:10px}
+        .btn-secondary{background:#eef3fc;color:var(--navy);border:1px solid #dce6f7}.btn-danger{background:#fff0f1;color:#c0394b;border:1px solid #f5cbd0;padding:10px 13px}
+        .empty{background:white;border:2px dashed #cbd7eb;border-radius:19px;text-align:center;padding:36px 18px;grid-column:1/-1}
+        .empty i{font-size:32px;color:var(--blue);margin-bottom:10px}.empty p{font-size:12px;color:var(--muted);margin:0 0 15px}
+        .folder-count{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:5px}
+        footer{background:var(--navy);color:#b9c8e8;text-align:center;padding:24px 15px;font-size:12px}
+        footer strong{display:block;color:white;font-size:14px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px}footer strong span{color:var(--yellow)}
+        @media(max-width:850px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.favorites{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:620px){.container{width:min(100% - 28px,520px)}.header-inner{height:auto;min-height:70px;padding:12px 0}.brand{font-size:20px}.brand-mark{width:38px;height:38px}.nav-link{display:none}.user-name{max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}main{padding:28px 0 42px}.page-top{align-items:flex-start;flex-direction:column}.stats{gap:10px}.stat{padding:15px}.stat-value{font-size:22px}.mission-list,.favorites{grid-template-columns:1fr}.mission{align-items:flex-start;flex-wrap:wrap}.mission-info{min-width:calc(100% - 65px)}.btn-small{margin-left:60px}}
+    </style>
 </head>
-
-<body class="bg-blue-700 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
-
-    <!-- Cabeçalho -->
-    <header class="bg-blue-900 text-white shadow-xl sticky top-0 z-50 border-b-4 border-yellow-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="{% url 'landing' %}" class="flex items-center space-x-3">
-                <div
-                    class="bg-yellow-400 text-blue-950 p-2.5 rounded-2xl font-black text-xl border-2 border-yellow-200">
-                    <i class="fa-solid fa-graduation-cap"></i></div>
-                <span class="text-2xl font-black tracking-wider uppercase">Educa<span
-                        class="text-yellow-400">+</span></span>
-            </a>
-            <div class="flex items-center space-x-3 bg-blue-950 px-3 py-1.5 rounded-2xl border-2 border-blue-600">
-                <div
-                    class="w-8 h-8 rounded-full bg-yellow-400 text-blue-950 font-black flex items-center justify-center text-xs uppercase">
-                    {{ request.user.username|first }}
-                </div>
-                <div>
-                    <p class="text-xs font-bold leading-tight">{{ request.user.username }}</p>
-                    <p class="text-[10px] text-yellow-400 font-black uppercase">Aluno</p>
-                </div>
-                <a href="{% url 'home' %}" title="Explorar Cursos"
-                    class="text-yellow-400 ml-2 hover:scale-110 transition"><i class="fa-solid fa-compass"></i></a>
-                <a href="{% url 'logout' %}" title="Sair" class="text-blue-200 hover:text-rose-400 ml-1"><i
-                        class="fa-solid fa-power-off"></i></a>
+<body>
+<header class="header">
+    <div class="container header-inner">
+        <a href="{% url 'home' %}" class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span><span>EDUCA<span class="brand-plus">+</span></span></a>
+        <div class="header-actions">
+            <a class="nav-link" href="{% url 'home' %}"><i class="fa-solid fa-compass"></i> Explorar cursos</a>
+            <div class="user-chip">
+                <span class="avatar">{{ request.user.username|first }}</span>
+                <div><div class="user-name">{{ request.user.username }}</div><div class="user-role">Aluno</div></div>
+                <a class="logout" href="{% url 'logout' %}" title="Sair"><i class="fa-solid fa-power-off"></i></a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-10 text-white">
-
-        <!-- Atalho visível para voltar ao catálogo de cursos -->
-        <div class="flex justify-end">
-            <a href="{% url 'home' %}"
-                class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-5 py-3 rounded-xl font-black text-sm uppercase shadow-lg transition">
-                <i class="fa-solid fa-arrow-left"></i> Voltar aos cursos
-            </a>
+<main>
+    <div class="container">
+        <div class="page-top">
+            <div><div class="eyebrow">Sua jornada de aprendizagem</div><h1>Meu perfil</h1></div>
+            <a href="{% url 'home' %}" class="btn btn-primary"><i class="fa-solid fa-arrow-left"></i> Voltar aos cursos</a>
         </div>
 
-        <!-- Cards de Estatísticas -->
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
-                <i class="fa-solid fa-bolt text-yellow-400"></i>
-                <p class="text-2xl font-black mt-1">NV {{ nivel_aluno }}</p>
-                <p class="text-[10px] uppercase font-black text-blue-200">Nível • {{ pontos }} XP</p>
-            </div>
-            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
-                <i class="fa-solid fa-fire text-yellow-400"></i>
-                <p class="text-2xl font-black mt-1">0</p>
-                <p class="text-[10px] uppercase font-black text-blue-200">Dias seguidos</p>
-            </div>
-            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
-                <i class="fa-solid fa-flag-checkered text-yellow-400"></i>
-                <p class="text-2xl font-black mt-1">{{ matriculas.count }}</p>
-                <p class="text-[10px] uppercase font-black text-blue-200">Matrículas</p>
-            </div>
-            <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4">
-                <i class="fa-solid fa-star text-yellow-400"></i>
-                <p class="text-2xl font-black mt-1">{{ favoritos.count }}</p>
-                <p class="text-[10px] uppercase font-black text-blue-200">Favoritos</p>
-            </div>
+        <section class="stats">
+            <div class="stat"><div class="stat-icon"><i class="fa-solid fa-bolt"></i></div><div class="stat-value">NV {{ nivel_aluno }}</div><div class="stat-label">Nível · {{ pontos }} XP</div></div>
+            <div class="stat"><div class="stat-icon"><i class="fa-solid fa-fire"></i></div><div class="stat-value">0</div><div class="stat-label">Dias seguidos</div></div>
+            <div class="stat"><div class="stat-icon"><i class="fa-solid fa-flag-checkered"></i></div><div class="stat-value">{{ matriculas.count }}</div><div class="stat-label">Matrículas</div></div>
+            <div class="stat"><div class="stat-icon"><i class="fa-solid fa-star"></i></div><div class="stat-value">{{ favoritos.count }}</div><div class="stat-label">Favoritos</div></div>
         </section>
 
-        <!-- Minhas Missões em Andamento -->
-        <section>
-            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i
-                    class="fa-solid fa-play text-yellow-400 mr-2"></i> Minhas Missões em Andamento</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section class="section">
+            <h2 class="section-heading"><i class="fa-solid fa-play"></i> Minhas missões em andamento</h2>
+            <div class="mission-list">
                 {% for matricula in matriculas %}
-                <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex items-center gap-4">
-                    <div class="flex-1">
-                        <p class="font-black text-sm">{{ matricula.curso.titulo }}</p>
-                        <div class="h-2 bg-blue-950 rounded-full overflow-hidden mt-2">
+                <article class="mission">
+                    <div class="mission-symbol"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="mission-info">
+                        <h3 class="mission-title">{{ matricula.curso.titulo }}</h3>
+                        <div class="progress-track">
                             {% if matricula.concluido %}
-                            <div class="h-full bg-emerald-400" style="width: 100%"></div>
+                                <div class="progress-fill" style="width:100%;background:#20a66a"></div>
                             {% else %}
-                            <div class="h-full bg-yellow-400" style="width: {{ matricula.progresso }}%"></div>
+                                <div class="progress-fill" style="width:{{ matricula.progresso }}%"></div>
                             {% endif %}
                         </div>
-                        <p class="text-[10px] uppercase font-black text-blue-200 mt-1">
-                            {% if matricula.concluido %}
-                            ✔ Concluída
-                            {% else %}
-                            {{ matricula.progresso }}% completo
-                            {% endif %}
-                        </p>
+                        <div class="progress-label">{% if matricula.concluido %}Concluída{% else %}{{ matricula.progresso }}% completo{% endif %}</div>
                     </div>
                     <form method="post" action="{% url 'continuar_curso' matricula.curso.id %}" target="_blank">
                         {% csrf_token %}
-                        <button type="submit"
-                            class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 px-3 py-2 rounded-xl text-xs font-black uppercase transition">
-                            {% if matricula.concluido %}
-                            Revisar
-                            {% else %}
-                            Continuar (+10 XP)
-                            {% endif %}
-                        </button>
+                        <button type="submit" class="btn btn-small">{% if matricula.concluido %}Revisar{% else %}Continuar · +10 XP{% endif %}</button>
                     </form>
-                </div>
+                </article>
                 {% empty %}
-                <p class="text-blue-200 text-sm col-span-2">Você ainda não se matriculou em nenhuma missão. <a
-                        href="{% url 'home' %}" class="text-yellow-400 underline">Explore os cursos!</a></p>
+                <div class="empty">
+                    <i class="fa-solid fa-book-open"></i>
+                    <p>Você ainda não se matriculou em nenhuma missão.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">Explorar cursos</a>
+                </div>
                 {% endfor %}
             </div>
         </section>
 
-        <!-- Favoritos -->
-        <section>
-            <h2 class="text-xl font-black uppercase mb-4 flex items-center"><i
-                    class="fa-solid fa-bookmark text-yellow-400 mr-2"></i> Missões Salvas</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <section class="section">
+            <h2 class="section-heading"><i class="fa-solid fa-folder-open"></i> Atividades dos meus cursos</h2>
+            <div class="mission-list">
+                {% for curso in activity_folders %}
+                <article class="mission">
+                    <div class="mission-symbol"><i class="fa-solid fa-folder-open"></i></div>
+                    <div class="mission-info">
+                        <h3 class="mission-title">{{ curso.titulo }}</h3>
+                        <div class="folder-count">{{ curso.atividades_count }} atividade{{ curso.atividades_count|pluralize:"s" }} · organize por nível</div>
+                    </div>
+                    <a href="{% url 'atividades_curso' curso.id %}" class="btn btn-small">Abrir pasta</a>
+                </article>
+                {% empty %}
+                <div class="empty">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>As atividades dos cursos em que você está matriculado aparecerão aqui.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-heading"><i class="fa-solid fa-bookmark"></i> Missões salvas</h2>
+            <div class="favorites">
                 {% for favorito in favoritos %}
-                <div class="bg-blue-900 border-2 border-blue-600 rounded-2xl p-4 flex flex-col justify-between">
+                <article class="favorite">
                     <div>
-                        <span class="text-[10px] font-black uppercase bg-yellow-400 text-blue-950 px-2 py-0.5 rounded">
-                            {{ favorito.curso.categoria }}
-                        </span>
-                        <h3 class="font-black mt-2">{{ favorito.curso.titulo }}</h3>
-                        <p class="text-xs text-blue-300">{{ favorito.curso.instrutor }}</p>
+                        <span class="tag">{{ favorito.curso.categoria }}</span>
+                        <h3>{{ favorito.curso.titulo }}</h3>
+                        <p><i class="fa-solid fa-chalkboard-user"></i> {{ favorito.curso.instrutor }}</p>
                     </div>
-                    <div class="flex gap-2 mt-4">
-                        <a href="{{ favorito.curso.link }}" target="_blank"
-                            class="flex-1 text-center bg-yellow-400 hover:bg-yellow-500 text-blue-950 py-2 rounded-xl text-xs font-black uppercase transition">Play</a>
-                        <a href="{% url 'favoritar_curso' favorito.curso.id %}"
-                            class="text-rose-400 hover:text-rose-300 px-2 flex items-center"
-                            title="Remover dos favoritos"><i class="fa-solid fa-trash"></i></a>
+                    <div class="favorite-actions">
+                        <a href="{{ favorito.curso.link }}" target="_blank" class="btn btn-primary"><i class="fa-solid fa-play"></i> Play</a>
+                        <a href="{% url 'favoritar_curso' favorito.curso.id %}" class="btn btn-danger" title="Remover dos favoritos"><i class="fa-solid fa-trash"></i></a>
                     </div>
-                </div>
+                </article>
                 {% empty %}
-                <div
-                    class="col-span-full text-center py-12 bg-blue-900 rounded-3xl border-4 border-dashed border-blue-600">
-                    <div class="text-yellow-400 text-5xl mb-3"><i class="fa-solid fa-ghost"></i></div>
-                    <p class="text-sm text-blue-200 mb-4">Nenhuma missão salva ainda.</p>
-                    <a href="{% url 'home' %}"
-                        class="bg-yellow-400 text-blue-950 font-black px-6 py-3 rounded-2xl text-sm uppercase inline-block hover:bg-yellow-500 transition">
-                        Explorar missões
-                    </a>
+                <div class="empty">
+                    <i class="fa-solid fa-bookmark"></i>
+                    <p>Nenhuma missão salva ainda.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">Explorar missões</a>
                 </div>
                 {% endfor %}
             </div>
         </section>
-    </main>
+    </div>
+</main>
+<footer><strong>EDUCA<span>+</span> · Painel do aluno</strong>© 2026 Todos os direitos reservados. UNIFIP - ADS</footer>
+<script>
+    let painelOculto = false;
 
-    <footer class="bg-blue-950 text-blue-300 py-8 border-t-4 border-yellow-400 text-center text-sm">
-        <p class="font-black text-white tracking-wider uppercase">Educa<span class="text-yellow-400">+</span> &bull;
-            Painel do Aluno</p>
-        <p>&copy; 2026 UNIFIP - ADS</p>
-    </footer>
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            painelOculto = true;
+        } else if (painelOculto) {
+            window.location.reload();
+        }
+    });
+</script>
 </body>
-
 </html>

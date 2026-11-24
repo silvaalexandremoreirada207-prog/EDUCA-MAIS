@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -5,80 +6,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educa+ | Login</title>
+
+    <title>Educa+ | Entrar</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .auth-card {
+            animation: aparecer 0.4s ease;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input:focus-visible {
+            outline: 3px solid rgba(23, 72, 184, 0.18);
+            outline-offset: 2px;
+        }
+
+        .role-option {
+            transition: all 0.2s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auth-card {
+                animation: none;
+            }
+
+            .role-option {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-blue-700 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-blue-950 text-white rounded-3xl max-w-md w-full p-8 border-4 border-yellow-400 shadow-2xl">
-        <div class="text-center mb-6">
-            <div class="bg-yellow-400 text-blue-950 p-3 rounded-2xl inline-flex mb-3">
-                <i class="fa-solid fa-right-to-bracket text-2xl"></i>
+<body class="bg-[#F4F7FC] min-h-screen flex flex-col">
+
+    <!-- Cabeçalho -->
+    <header class="bg-[#03123D] text-white py-4 px-6 shadow-lg">
+        <div class="max-w-6xl mx-auto flex items-center gap-3">
+
+            <div class="bg-[#FFD21F] text-[#03123D]
+                        w-12 h-12 rounded-xl flex items-center
+                        justify-center">
+
+                <i class="fa-solid fa-graduation-cap text-xl"></i>
             </div>
-            <h1 class="text-2xl font-black uppercase">Entrar no Educa+</h1>
+
+            <span class="text-2xl font-black tracking-wide">
+                EDUCA<span class="text-[#FFD21F] ml-0.5">+</span>
+            </span>
+
         </div>
+    </header>
 
-        {% if messages %}
-        {% for message in messages %}
-        <div class="bg-rose-900 text-rose-200 p-3 rounded-xl mb-4 text-sm border border-rose-700">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
 
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <div>
-                <label class="block text-xs font-black uppercase text-yellow-400 mb-2">Entrar como</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <label class="cursor-pointer">
-                        {% if request.GET.tipo == 'professor' %}
-                        <input type="radio" name="tipo" value="aluno" class="peer sr-only">
-                        {% else %}
-                        <input type="radio" name="tipo" value="aluno" class="peer sr-only" checked>
-                        {% endif %}
-                        <div
-                            class="bg-blue-900 border-2 border-blue-700 peer-checked:border-yellow-400 peer-checked:bg-blue-800 rounded-xl py-3 text-center text-xs font-black uppercase transition">
-                            <i class="fa-solid fa-user-graduate mr-1"></i> Aluno
-                        </div>
-                    </label>
-                
-                    <label class="cursor-pointer">
-                        {% if request.GET.tipo == 'professor' %}
-                        <input type="radio" name="tipo" value="professor" class="peer sr-only" checked>
-                        {% else %}
-                        <input type="radio" name="tipo" value="professor" class="peer sr-only">
-                        {% endif %}
-                        <div
-                            class="bg-blue-900 border-2 border-blue-700 peer-checked:border-yellow-400 peer-checked:bg-blue-800 rounded-xl py-3 text-center text-xs font-black uppercase transition">
-                            <i class="fa-solid fa-chalkboard-user mr-1"></i> Professor
-                        </div>
-                    </label>
+    <!-- Conteúdo principal -->
+    <main class="flex-1 flex items-center justify-center
+                 px-5 py-10 ">
+
+        <div class="auth-card max-w-md w-full mx-auto">
+
+            <div class="bg-white rounded-3xl border border-gray-200
+                        shadow-xl p-7 sm:p-9">
+
+                <!-- Identificação -->
+                <div class="text-center mb-8">
+
+                    <div class="bg-blue-100 text-[#1748B8]
+                                w-16 h-16 rounded-2xl
+                                inline-flex items-center justify-center
+                                mb-4">
+
+                        <i class="fa-solid fa-right-to-bracket text-3xl"></i>
+
+                    </div>
+
+                    <h1 class="text-3xl font-black text-[#03123D] mb-2">
+                        Bem-vindo de volta!
+                    </h1>
+
+                    <p class="text-gray-500 text-sm">
+                        Entre na sua conta e continue sua jornada de aprendizagem.
+                    </p>
+
                 </div>
+
+
+                <!-- Mensagens do Django -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="bg-rose-50 text-rose-700
+                                    border border-rose-200
+                                    p-3 rounded-xl mb-4 text-sm">
+
+                            <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                            {{ message }}
+
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                <!-- Formulário -->
+                <form method="post" class="space-y-5">
+
+                    {% csrf_token %}
+
+
+                    <!-- Tipo de acesso -->
+                    <div>
+
+                        <label class="block text-sm font-bold
+                                      text-[#03123D] mb-3">
+
+                            Entrar como
+
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-3">
+
+                            <!-- Aluno -->
+                            <label class="cursor-pointer">
+
+                                <input
+                                    type="radio"
+                                    name="tipo"
+                                    value="aluno"
+                                    class="peer sr-only"
+                                    {% if request.GET.tipo != 'professor' %}
+                                        checked
+                                    {% endif %}>
+
+                                <div class="role-option border-2
+                                            border-gray-200 rounded-xl
+                                            p-4 text-center
+                                            text-gray-500
+                                            peer-checked:border-[#1748B8]
+                                            peer-checked:bg-blue-50
+                                            peer-checked:text-[#1748B8]
+                                            peer-focus-visible:ring-2
+                                            peer-focus-visible:ring-[#1748B8]">
+
+                                    <i class="fa-solid fa-user-graduate
+                                              text-2xl mb-2"></i>
+
+                                    <p class="font-bold text-sm">
+                                        Aluno
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+
+                            <!-- Professor -->
+                            <label class="cursor-pointer">
+
+                                <input
+                                    type="radio"
+                                    name="tipo"
+                                    value="professor"
+                                    class="peer sr-only"
+                                    {% if request.GET.tipo == 'professor' %}
+                                        checked
+                                    {% endif %}>
+
+                                <div class="role-option border-2
+                                            border-gray-200 rounded-xl
+                                            p-4 text-center
+                                            text-gray-500
+                                            peer-checked:border-[#1748B8]
+                                            peer-checked:bg-blue-50
+                                            peer-checked:text-[#1748B8]
+                                            peer-focus-visible:ring-2
+                                            peer-focus-visible:ring-[#1748B8]">
+
+                                    <i class="fa-solid fa-chalkboard-user
+                                              text-2xl mb-2"></i>
+
+                                    <p class="font-bold text-sm">
+                                        Professor
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Usuário -->
+                    <div>
+
+                        <label for="username"
+                               class="block text-sm font-bold
+                                      text-[#03123D] mb-2">
+
+                            Usuário
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Digite seu nome de usuário"
+                            autocomplete="username"
+                            required
+                            autofocus
+                            class="w-full bg-[#F4F7FC]
+                                   border border-gray-200
+                                   rounded-xl px-4 py-3.5
+                                   text-[#03123D]
+                                   placeholder-gray-400
+                                   focus:outline-none
+                                   focus:border-[#1748B8]
+                                   focus:ring-2 focus:ring-blue-100
+                                   transition">
+
+                    </div>
+
+
+                    <!-- Senha -->
+                    <div>
+
+                        <label for="password"
+                               class="block text-sm font-bold
+                                      text-[#03123D] mb-2">
+
+                            Senha
+
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                            class="w-full bg-[#F4F7FC]
+                                   border border-gray-200
+                                   rounded-xl px-4 py-3.5
+                                   text-[#03123D]
+                                   placeholder-gray-400
+                                   focus:outline-none
+                                   focus:border-[#1748B8]
+                                   focus:ring-2 focus:ring-blue-100
+                                   transition">
+
+                    </div>
+
+
+                    <!-- Botão entrar -->
+                    <button
+                        type="submit"
+                        class="w-full bg-[#FFD21F]
+                               hover:bg-yellow-400
+                               text-[#03123D]
+                               font-black py-4 rounded-xl
+                               uppercase tracking-wide
+                               shadow-sm hover:shadow-md
+                               transition active:scale-[0.98]">
+
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                        Entrar
+
+                    </button>
+
+                </form>
+
+
+                <!-- Navegação -->
+                <div class="mt-7 pt-5 border-t border-gray-100
+                            flex flex-col sm:flex-row
+                            justify-center items-center
+                            gap-3 text-sm">
+
+                    <a href="{% url 'landing' %}"
+                       class="text-gray-500 hover:text-[#1748B8]
+                              font-medium transition">
+
+                        <i class="fa-solid fa-arrow-left mr-1"></i>
+                        Voltar para o início
+
+                    </a>
+
+                    <!-- Cadastro 
+                    <section class="text-center mt-10">
+
+                        <p class="text-gray-600 font-bold">
+
+                            Ainda não possui uma conta?
+
+                            <a href="{% url 'cadastro' %}"
+                                class="font-extrabold text-[#1748B8]
+                                hover:text-[#03123D] underline
+                                underline-offset-4 ml-1">
+
+                            Criar conta
+
+                            </a>
+
+                        </p>
+
+                    </section>-->
+
+                    <span class="hidden sm:block text-gray-300">|</span>
+
+                    <a href="{% url 'cadastro' %}"
+                       class="text-[#1748B8] hover:text-[#03123D]
+                              font-bold transition">
+
+                        Criar conta
+
+                    </a>
+                
+                </div>
+
             </div>
 
-            <div>
-                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Usuário</label>
-                <input type="text" name="username" required autofocus
-                    class="w-full bg-blue-900 border-2 border-blue-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400">
-            </div>
-            <div>
-                <label class="block text-xs font-black uppercase text-yellow-400 mb-1">Senha</label>
-                <input type="password" name="password" required
-                    class="w-full bg-blue-900 border-2 border-blue-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400">
-            </div>
-
-            <button type="submit"
-                class="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black py-3.5 rounded-xl uppercase tracking-wider transition">
-                Entrar
-            </button>
-        </form>
-
-        <div class="mt-6 text-center text-sm text-blue-300">
-            <a href="{% url 'landing' %}" class="hover:text-yellow-400">← Voltar</a>
-            <span class="mx-2">|</span>
-            <a href="{% url 'cadastro' %}" class="hover:text-yellow-400">Criar conta</a>
         </div>
-    </div>
-</body>
 
+    </main>
+
+</body>
 </html>
